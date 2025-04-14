@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="7de7e5c1-1ce5-40c7-81e4-61769d927086" name="time-gan">
+        <fileTransfer rootFolder="/home/hypeng/graduate/time-gan" accessType="SFTP" host="202.117.43.220" port="22" sshConfigId="cdae9f78-4de9-4027-8d07-23ed8a4ca86a" sshConfig="hypeng@202.117.43.220:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

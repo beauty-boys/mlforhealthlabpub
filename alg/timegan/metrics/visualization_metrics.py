@@ -24,6 +24,9 @@ from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
+import os
+
 
 #%% PCA Analysis
     
@@ -63,8 +66,20 @@ def PCA_Analysis (dataX, dataX_hat):
     plt.xlabel('x-pca')
     plt.ylabel('y_pca')
     plt.show()
-    
-    
+    plt.savefig("./img/pca_result.png")  # 保存成图片
+
+
+    # 拼接时间
+    save_prefix = "./img/pca_result"
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    save_path = f"{save_prefix}_{timestamp}.png"
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path)
+
+    plt.close()
+
+
 #%% TSNE Analysis
     
 def tSNE_Analysis (dataX, dataX_hat):
@@ -104,5 +119,16 @@ def tSNE_Analysis (dataX, dataX_hat):
     plt.xlabel('x-tsne')
     plt.ylabel('y_tsne')
     plt.show()
+
+    # 拼接时间
+    save_prefix = "./img/t-sne_result"
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    save_path = f"{save_prefix}_{timestamp}.png"
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path)
+
+    plt.close()
+
     
     
