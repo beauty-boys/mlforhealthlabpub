@@ -52,7 +52,7 @@ from predictive_score_metrics import predictive_score_metrics
 #%% Main Parameters
 # Data
 data_set = ['google','sine']
-data_name = data_set[1]
+data_name = data_set[0]
 
 # Experiments iterations
 Iteration = 2
