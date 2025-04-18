@@ -66,8 +66,6 @@ def PCA_Analysis (dataX, dataX_hat):
     plt.xlabel('x-pca')
     plt.ylabel('y_pca')
     plt.show()
-    plt.savefig("./img/pca_result.png")  # 保存成图片
-
 
     # 拼接时间
     save_prefix = "./img/pca_result"
