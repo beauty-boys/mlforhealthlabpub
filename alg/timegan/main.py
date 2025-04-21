@@ -28,6 +28,10 @@ Outputs
 (3) Predictive Score
 '''
 
+import os
+import datetime
+
+
 #%% Necessary Packages
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
@@ -48,6 +52,8 @@ sys.path.append('metrics')
 from discriminative_score_metrics import discriminative_score_metrics
 from visualization_metrics import PCA_Analysis, tSNE_Analysis
 from predictive_score_metrics import predictive_score_metrics
+
+
 
 #%% Main Parameters
 # Data
@@ -73,12 +79,16 @@ print(data_name + ' dataset is ready.')
 #%% Newtork Parameters
 parameters = dict()
 
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 parameters['hidden_dim'] = len(dataX[0][0,:]) * 4
 parameters['num_layers'] = 3
 parameters['iterations'] = 50000
 parameters['batch_size'] = 128
 parameters['module_name'] = 'gru'   # Other options: 'lstm' or 'lstmLN'
-parameters['z_dim'] = len(dataX[0][0,:]) 
+parameters['z_dim'] = len(dataX[0][0,:])
+parameters['path'] = './model/' + data_name+'/' + timestamp
+
+print(parameters['path'])
 
 #%% Experiments
 # Output Initialization
@@ -89,7 +99,7 @@ Predictive_Score = list()
 for it in range(Iteration):
 
     # Synthetic Data Generation
-    dataX_hat = tgan(dataX, parameters)   
+    dataX_hat = tgan(dataX, parameters)
       
     print('Finish Synthetic Data Generation')
 

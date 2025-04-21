@@ -22,6 +22,9 @@ Outputs
 #%% Necessary Packages
 import tensorflow as tf
 import numpy as np
+import datetime
+import os
+
 
 #%% Min Max Normalizer
 
@@ -68,6 +71,10 @@ def tgan (dataX, parameters):
     module_name  = parameters['module_name']    # 'lstm' or 'lstmLN'
     z_dim        = parameters['z_dim']
     gamma        = 1
+    # 保存文件路径
+    filesave_path = parameters['path']
+    # 日志文件路径
+    os.makedirs(filesave_path, exist_ok=True)
     
     #%% input place holders
     
@@ -249,6 +256,11 @@ def tgan (dataX, parameters):
     #%% Embedding Learning
     
     print('Start Embedding Network Training')
+
+    log_path = os.path.join(filesave_path, 'embedding_train_log.txt')
+    log_file = open(log_path, 'w')
+    print(log_file)
+
     
     for itt in range(iterations):
         
@@ -263,13 +275,22 @@ def tgan (dataX, parameters):
         _, step_e_loss = sess.run([E0_solver, E_loss_T0], feed_dict={X: X_mb, T: T_mb})
         
         if itt % 1000 == 0:
-            print('step: '+ str(itt) + ', e_loss: ' + str(np.round(np.sqrt(step_e_loss),4)) )        
+            log_str = 'step: '+ str(itt) + ', e_loss: ' + str(np.round(np.sqrt(step_e_loss),4))
+            # print('step: '+ str(itt) + ', e_loss: ' + str(np.round(np.sqrt(step_e_loss),4)) )
+            print(log_str)
+            log_file.write(log_str + '\n')
+    log_file.close()
+
+
             
     print('Finish Embedding Network Training')
     
     #%% Training Supervised Loss First
     
     print('Start Training with Supervised Loss Only')
+    log_path = os.path.join(filesave_path, 'surpervised_loss_log.txt')
+    log_file = open(log_path, 'w')
+    print(log_file)
     
     for itt in range(iterations):
         
@@ -286,13 +307,20 @@ def tgan (dataX, parameters):
         _, step_g_loss_s = sess.run([GS_solver, G_loss_S], feed_dict={Z: Z_mb, X: X_mb, T: T_mb})
                            
         if itt % 1000 == 0:
-            print('step: '+ str(itt) + ', s_loss: ' + str(np.round(np.sqrt(step_g_loss_s),4)) )
-                
+            log_str = 'step: '+ str(itt) + ', s_loss: ' + str(np.round(np.sqrt(step_g_loss_s),4))
+            # print('step: '+ str(itt) + ', s_loss: ' + str(np.round(np.sqrt(step_g_loss_s),4)) )
+            print(log_str)
+            log_file.write(log_str + '\n')
+
     print('Finish Training with Supervised Loss Only')
+    log_file.close()
     
     #%% Joint Training
     
     print('Start Joint Training')
+    log_path = os.path.join(filesave_path, 'joint_train_log.txt')
+    log_file = open(log_path, 'w')
+    print(log_file)
     
     # Training step
     for itt in range(iterations):
@@ -338,15 +366,36 @@ def tgan (dataX, parameters):
         
         #%% Checkpoints
         if itt % 1000 == 0:
-            print('step: '+ str(itt) + 
-                  ', d_loss: ' + str(np.round(step_d_loss,4)) + 
-                  ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + 
-                  ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + 
-                  ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + 
-                  ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
-   
-    
+            log_str = 'step: '+ str(itt) + \
+                  ', d_loss: ' + str(np.round(step_d_loss,4)) + \
+                  ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) + \
+                  ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) + \
+                  ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) + \
+                  ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))
+
+            # print('step: '+ str(itt) +
+            #       ', d_loss: ' + str(np.round(step_d_loss,4)) +
+            #       ', g_loss_u: ' + str(np.round(step_g_loss_u,4)) +
+            #       ', g_loss_s: ' + str(np.round(np.sqrt(step_g_loss_s),4)) +
+            #       ', g_loss_v: ' + str(np.round(step_g_loss_v,4)) +
+            #       ', e_loss_t0: ' + str(np.round(np.sqrt(step_e_loss_t0),4))  )
+            print(log_str)
+            log_file.write(log_str + '\n')
+
+
     print('Finish Joint Training')
+    log_file.close()
+
+
+    # 保存模型
+    log_path = os.path.join(filesave_path, 'surpervised_loss_log.txt')
+    log_file = open(log_path, 'w')
+    print(log_file)
+
+    model_path = os.path.join(filesave_path, 'model.ckpt')
+    saver = tf.train.Saver()
+    saver.save(sess, model_path)
+    print(f'Model saved at {model_path}')
     
     #%% Final Outputs
     
